@@ -57,15 +57,15 @@ export class AppealsService {
   async getAppeals(date?: string, from?: string, to?: string) {
     let where: any = {};
     try {
-        if (date) {
-          const startDate = new Date(date);
-          const endDate = new Date(startDate);
-          endDate.setDate(startDate.getDate() + 1);
-          where.createdAt = Between(startDate, endDate);
-        } else if (from && to) {
-          where.createdAt = Between(new Date(from), new Date(to));
-        }
-        return await this.appealsRepository.find({ where });
+      if (date) {
+        const startDate = new Date(date);
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 1);
+        where.createdAt = Between(startDate, endDate);
+      } else if (from && to) {
+        where.createdAt = Between(new Date(from), new Date(to));
+      }
+      return await this.appealsRepository.find({ where });
     } catch (error) {
       console.error("Ошибка в вывод всего (фильтр)", error);
       throw error;
@@ -75,7 +75,7 @@ export class AppealsService {
   async cancelAllInProgress() {
     try {
       const appeals = await this.appealsRepository.findBy({ status: AppealsStatus.IN_PROGRESS });
-      if (!appeals) throw new Error("Обращение не найдено");
+      if (appeals.length === 0) throw new Error("Обращения не найдены");
       for (const appeal of appeals) {
         appeal.status = AppealsStatus.CANCELED;
         appeal.cancelReason = "Отмена всех в процессе";

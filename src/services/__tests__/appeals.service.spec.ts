@@ -90,9 +90,40 @@ describe("AppealsService", () => {
     expect(mockRepository.save).toHaveBeenCalledWith(expect.any(Array));
   });
 
+  it("должен успешно отменить все обращения в процессе", async () => {
+    const appeals = [
+      { id: 1, status: AppealsStatus.IN_PROGRESS },
+      { id: 2, status: AppealsStatus.IN_PROGRESS },
+    ];
+    mockRepository.findBy.mockResolvedValue(appeals);
+    mockRepository.save.mockResolvedValue(appeals);
+
+    const result = await service.cancelAllInProgress();
+    expect(result).toBe(2);
+    expect(mockRepository.save).toHaveBeenCalledWith(appeals);
+  });
+
+
+  
   it("должен выбросить ошибку, если обращение не найдено", async () => {
     mockRepository.findOneBy.mockResolvedValue(null);
 
     await expect(service.setInProgress(1)).rejects.toThrow("Обращение не найдено");
   });
+
+  it("должен выбросить ошибку при завершении несуществующего обращения", async () => {
+    mockRepository.findOneBy.mockResolvedValue(null);
+    await expect(service.completeAppeal(1, "Resolved")).rejects.toThrow("Обращение не найдено");
+  });
+
+  it("должен выбросить ошибку при отмене несуществующего обращения", async () => {
+    mockRepository.findOneBy.mockResolvedValue(null);
+    await expect(service.cancelAppeals(1, "No reason")).rejects.toThrow("Обращение не найдено");
+  });
+
+  it("должен выбросить ошибку при отмене всех обращений, если их нет", async () => {
+    mockRepository.findBy.mockResolvedValue([]);
+    await expect(service.cancelAllInProgress()).rejects.toThrow("Обращения не найдены");
+  });
+
 });
