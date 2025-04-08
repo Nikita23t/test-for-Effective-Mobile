@@ -1,5 +1,7 @@
 ### Тестовое заданрие для Effective Mobile
 
+Тестовое задание сделано с использованием typescript, express.js, typeORM, postgreSQL
+
 ---
 
 #### Как запустить приложение
