@@ -14,6 +14,10 @@
     npm run build
     npm run start
 ```
+**4. (Дополнительно) Можно запустить тесты для сервиса:**
+```bash
+    npm run test
+```
 
 ---
 
