@@ -4,6 +4,7 @@ import router from "./routes/appeals.router";
 import { AppDataSource } from "./database.config";
 import dotenv from "dotenv";
 import cors from "cors";
+import { errorHandler } from "./middlewares/errorHandler";
 dotenv.config();
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type'],
 }));
+app.use(errorHandler);
 
 AppDataSource.initialize().then(() => {
   app.use("/api", router);
